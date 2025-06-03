@@ -34,7 +34,11 @@ default_words = [
     "Kreuzvalidierung", "Validierungsfehler", "Trainingsfehler", "Lasso", "Regularisierung",
     "AIC", "BIC", "Adjustiertes R²", "Klassifikator", "Genauigkeit", "KNN", "Naive Bayes", "Logistische Regression"
 ]
-st.subheader("2. Statistik-Begriffe")
+
+st.subheader("2. Anzahl der Impostors")
+n_impostors = st.number_input("Wie viele Impostors sollen mitspielen?", min_value=1, max_value=5, value=1, step=1)
+
+st.subheader("3. Statistik-Begriffe")
 wordlist = st.text_area("Optional: Eigene Begriffe eingeben (eine Zeile pro Begriff):", value="\n".join(default_words)).splitlines()
 
 # --- Spiel starten ---
@@ -43,7 +47,7 @@ if st.button("🔁 Rollen zufällig verteilen") and len(names) >= 4:
     if len(players) < 4:
         st.warning("Mindestens 4 Spieler*innen erforderlich.")
     else:
-        n_impostors = 2 if len(players) > 6 else 1
+        n_impostors = min(n_impostors, len(players) - 1)
         impostors = random.sample(players, n_impostors)
         word = random.choice(wordlist).strip()
         random.shuffle(players)
@@ -62,7 +66,7 @@ if st.button("🔁 Rollen zufällig verteilen") and len(names) >= 4:
 
 # --- Spielrunde ---
 if st.session_state.get("game_started", False):
-    st.subheader("3. Rollen nacheinander aufdecken")
+    st.subheader("4. Rollen nacheinander aufdecken")
 
     idx = st.session_state["current_index"]
     reveal_order = st.session_state["reveal_order"]
@@ -83,7 +87,7 @@ if st.session_state.get("game_started", False):
 
     else:
         st.success("🎉 Alle Rollen wurden aufgedeckt!")
-        st.subheader("4. Diskussion & Reihenfolge")
+        st.subheader("5. Diskussion & Reihenfolge")
         st.markdown("💬 Gebt nun reihum eure Hinweise. Versucht, nicht zu offensichtlich zu sein – aber zeigt, dass ihr das Wort kennt!")
         st.markdown("---")
         st.markdown("➡️ Vorschlag für Startperson:")
